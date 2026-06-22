@@ -72,19 +72,34 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  function handleQuoteForm(e) {
-    e.preventDefault();
-    document.getElementById('quote-form').style.display = 'none';
-    document.getElementById('modal-success').style.display = 'block';
-    setTimeout(closeModal, 2500);
-  }
+  function handleQuoteForm(event) {
+  event.preventDefault();
 
-  // ===== CONTACT FORM =====
-  function handleContactForm(e) {
-    e.preventDefault();
-    document.getElementById('contact-form').style.display = 'none';
-    document.getElementById('contact-success').style.display = 'block';
-  }
+  const form = document.getElementById("quote-form");
+  const submitBtn = form.querySelector(".form-submit");
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Sending...";
+
+  emailjs
+    .sendForm(
+      "service_l4lsli4",
+      "template_q673lsd",
+      form
+    )
+    .then(() => {
+      form.style.display = "none";
+      document.getElementById("modal-success").style.display = "block";
+    })
+    .catch((error) => {
+      console.error("EmailJS Error:", error);
+      alert("Error Sending your Request. Please Try Again.");
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Quote Request";
+    });
+}
 
   // ===== FOOTER YEAR =====
   document.getElementById('footer-year').textContent = new Date().getFullYear();
